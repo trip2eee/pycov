@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QProgressBar, QFileDialog
 from PyQt5.QtCore import QSize
 
 from src.gcov_parser import GCOVParser
+from src.code_window import CodeWindow
 
 
 class MainWindow(QMainWindow):
@@ -18,6 +19,7 @@ class MainWindow(QMainWindow):
 
         self.path = './'
         self.open_folder(self.path)
+        self.code_window = None
 
     def initUI(self):                
         menubar = self.menuBar()
@@ -70,7 +72,22 @@ class MainWindow(QMainWindow):
         """ file_tree (QTreeWidget) itemDoubleClicked event handler.
             This method is called when an item of file_tree is double clicked.
         """
-        pass
+
+        # find the double clicked item.
+        it = QTreeWidgetItemIterator(self.file_tree)
+        while it.value():
+            
+            if it.value().isSelected():
+                idx_item = self.file_tree.indexOfTopLevelItem(it.value())
+
+                if idx_item < len(self.list_cov):
+                    print(self.list_cov[idx_item].file_path)
+
+                    self.code_window = CodeWindow(self.list_cov[idx_item])
+                    self.code_window.show()
+
+            it += 1
+
 
     def add_progressbar(self, item, idx_col, value):
         """ This method add a progressbar in the specific column of the input item.
@@ -90,9 +107,9 @@ class MainWindow(QMainWindow):
         if value >= 90:
             color = 'lightgreen'
         elif value >= 80:
-            color = 'yellow'
+            color = '#FFFF00'
         else:
-            color = 'red'
+            color = '#FFCCCB'
 
         bar.setStyleSheet(
                         "QProgressBar"
