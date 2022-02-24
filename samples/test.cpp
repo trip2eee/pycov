@@ -1,4 +1,5 @@
 #include <iostream>
+#include "calc.h"
 
 void foo(const int n)
 {
@@ -30,6 +31,14 @@ int main()
         std::cout << "a is less than 10\n";
         bar(a);
     }
+
+    Calc calc;
+    const int x = 3;
+    const int y = 1;
+    std::cout << x << " + " << y << " = " << calc.add(x, y) << std::endl;
+    std::cout << x << " - " << y << " = " << calc.sub(x, y) << std::endl;
+    std::cout << x << " * " << y << " = " << calc.mul(x, y) << std::endl;
+    std::cout << x << " / " << y << " = " << calc.div(x, y) << std::endl;
 
     return 0;
 }
