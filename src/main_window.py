@@ -13,11 +13,20 @@ class MainWindow(QMainWindow):
     """ PyCov Main window class
     """
     def __init__(self, argv) -> None:
+        """ Constructor.
+            argv: command line argument.
+                  argv[0]: pycov.py file path.
+                  argv[1]: directory path to open (optional).
+        """
         super().__init__()
 
         self.initUI()
 
-        self.path = './'
+        if len(argv) == 2:
+            self.path = argv[1]
+        else:
+            self.path = './'
+
         self.open_folder(self.path)
         self.code_window = None
 
@@ -152,17 +161,17 @@ class MainWindow(QMainWindow):
         if self.num_lines > 0:
             self.line_coverage = self.num_lines_exec / self.num_lines
         else:
-            self.line_coverage = 1.0
+            self.line_coverage = 0.0
 
         if  self.num_functions > 0:
             self.function_coverage = self.num_functions_exec / self.num_functions
         else:
-            self.function_coverage = 1.0
+            self.function_coverage = 0.0
 
         if self.num_branches > 0:
             self.branch_coverage = self.num_branches_exec / self.num_branches
         else:
-            self.branch_coverage = 1.0
+            self.branch_coverage = 0.0
 
         self.file_tree.clear()
 

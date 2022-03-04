@@ -90,14 +90,14 @@ class GCOVParser:
         if self.num_lines > 0:
             self.line_coverage = self.num_lines_exec / self.num_lines
         else:
-            self.line_coverage = 1.0
+            self.line_coverage = 0.0
 
         if  self.num_functions > 0:
             self.function_coverage = self.num_functions_exec / self.num_functions
         else:
-            self.function_coverage = 1.0
+            self.function_coverage = 0.0
 
         if self.num_branches > 0:
             self.branch_coverage = self.num_branches_exec / self.num_branches
         else:
-            self.branch_coverage = 1.0
+            self.branch_coverage = 0.0
