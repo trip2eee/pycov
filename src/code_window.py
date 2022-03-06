@@ -75,7 +75,7 @@ class CodeWindow(QMainWindow):
 
         
     def initUI(self):
-        self.setWindowTitle(self.cov.file_path)        
+        self.setWindowTitle(self.cov.source_path)        
         self.resize(800, 500)
 
         self.text_edit = QTextEdit(self)

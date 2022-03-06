@@ -1,4 +1,6 @@
 import os
+import json
+import shutil
 
 from PyQt5.QtWidgets import QMainWindow, QAction, qApp
 from PyQt5.QtWidgets import QTreeWidget, QTreeWidgetItem, QTreeWidgetItemIterator
@@ -45,6 +47,11 @@ class MainWindow(QMainWindow):
         actionRefresh.triggered.connect(self.event_refresh)
         file_menu.addAction(actionRefresh)
 
+        actionExport = QAction('&Export', self)
+        actionExport.setShortcut('Ctrl+E')
+        actionExport.triggered.connect(self.event_export)
+        file_menu.addAction(actionExport)
+
         file_menu.addSeparator()
 
         actionExit = QAction('E&xit', self)
@@ -90,13 +97,75 @@ class MainWindow(QMainWindow):
                 idx_item = self.file_tree.indexOfTopLevelItem(it.value())
 
                 if idx_item < len(self.list_cov):
-                    print(self.list_cov[idx_item].file_path)
-
                     self.code_window = CodeWindow(self.list_cov[idx_item])
                     self.code_window.show()
 
             it += 1
 
+
+    def event_export(self):
+        """ File -> Export menu event handler.
+        """
+        export_path = QFileDialog.getExistingDirectory(self, "Select Directory")
+
+        # export index.html
+        with open('template/index.html', 'r') as f:
+            temp_index = f.read()
+        
+        code_metrics = []
+        for cov in self.list_cov:
+            metric = {
+                'name': cov.source_path,
+                'link': os.path.basename(cov.file_path)[:-5] + '.html',
+                'lines': int(cov.line_coverage * 100),
+                'functions': int(cov.function_coverage * 100),
+                'branches': int(cov.branch_coverage * 100)
+            }
+            code_metrics.append(metric)
+        
+        total_metric = {
+            'name': 'Total',
+            'lines': int(self.line_coverage * 100),
+            'functions': int(self.function_coverage * 100),
+            'branches': int(self.branch_coverage * 100)
+        }
+
+        code_metrics_json = json.dumps(code_metrics)
+        total_metric_json = json.dumps(total_metric)
+        temp_index = temp_index.replace("<<CODE_METRICS>>", code_metrics_json)
+        temp_index = temp_index.replace("<<TOTAL_METRICS>>", total_metric_json)
+
+        with open(os.path.join(export_path, 'index.html'), 'w') as f:
+            f.write(temp_index)
+
+        # export source files.        
+        for cov in self.list_cov:
+            name_only = os.path.basename(cov.file_path)
+            name_only = name_only[:-5]
+
+            code_lines = []
+            line_covered = []
+            for line in cov.lines:
+                code_lines.append(line.line)
+                line_covered.append(line.covered)
+
+            dst_path = os.path.join(export_path, name_only + '.html')
+
+            temp_source = ''
+            with open('template/source.html', 'r') as f:
+                temp_source = f.read()
+            
+            code_lines_json = json.dumps(code_lines)
+            line_covered_json = json.dumps(line_covered)
+            temp_source = temp_source.replace('<<SOURCE_PATH>>', cov.source_path)
+            temp_source = temp_source.replace('<<CODE_LINES>>', code_lines_json)
+            temp_source = temp_source.replace('<<LINE_COVERED>>', line_covered_json)
+
+            with open(os.path.join(export_path, name_only + '.html'), 'w') as f:
+                f.write(temp_source)
+
+
+        shutil.copyfile('template/style.css', os.path.join(export_path, 'style.css'))
 
     def add_progressbar(self, item, idx_col, value):
         """ This method add a progressbar in the specific column of the input item.
@@ -178,7 +247,7 @@ class MainWindow(QMainWindow):
         items = []
         for i in range(len(self.list_cov)):
             item = QTreeWidgetItem()
-            item.setText(0, self.list_cov[i].file_path)            
+            item.setText(0, self.list_cov[i].source_path)            
             items.append(item)
         
         item_total = QTreeWidgetItem()

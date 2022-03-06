@@ -1,3 +1,9 @@
+/**
+ * @file   test.cpp
+ * @brief  Coverate test code.
+ * @author Jongmin Park
+*/
+
 #include "calc.h"
 
 int Calc::add(const int x, const int y)

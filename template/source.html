@@ -1,0 +1,56 @@
+<html>
+    <head>
+        <title><<SOURCE_PATH>> - Coverage</title>
+        <link rel='stylesheet' href='style.css' type='text/css'>
+    </head>
+
+    <body>
+        Source File: <<SOURCE_PATH>>
+        
+        <table>
+            <tr>
+                <td>Legend: </td>
+                <td><div id='legend_nes'></div></td><td>Non Executable</td>
+                <td><div id='legend_ncd'></div></td><td>Not Covered</td>
+                <td><div id='legend_bpc'></div></td><td>Partially Covered</td>
+                <td><div id='legend_cvd'></div></td><td>Covered</td>
+            </tr>
+        </table>
+        
+        <hr>
+        
+        <table id='table_source'>
+
+        </table>
+    </body>
+
+    <script>
+        const code_lines = <<CODE_LINES>>;
+        const line_covered = <<LINE_COVERED>>;
+
+        let table_source = document.getElementById('table_source');
+        for(let idx_line = 0; idx_line < code_lines.length; idx_line++){
+            let row_line = table_source.insertRow(idx_line);
+            
+            if(line_covered[idx_line] == 0){
+                row_line.style.backgroundColor = 'white';
+            }else if(line_covered[idx_line] == 1){
+                row_line.style.backgroundColor = 'lightcoral';
+            }else if(line_covered[idx_line] == 2){
+                row_line.style.backgroundColor = 'yellow';
+            }else{
+                row_line.style.backgroundColor = 'lightgreen';
+            }
+
+            let cell_number = row_line.insertCell(0);
+            cell_number.innerHTML = "<pre>" + (idx_line + 1) + "</pre>";
+            
+            let cell_code = row_line.insertCell(1);
+            cell_code.innerHTML = "<pre>" + code_lines[idx_line] + "</pre>";
+        }
+
+    </script>
+</html>
+
+
+

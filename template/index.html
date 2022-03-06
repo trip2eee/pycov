@@ -1,0 +1,110 @@
+<html>
+    <head>
+        <title>PyCov - Code Coverage Report</title>
+        <link rel='stylesheet' href='style.css' type='text/css'>
+    </head>
+    <body>
+        <b>PyCov - Code Coverage Report</b>
+        <br>
+        <br>
+
+        <table id='table_summary' class='table_summary'>
+            <tr>
+                <TH>File name <a href="javascript:sort('name', -1);">&#9650;</a><a href="javascript:sort('name', +1);">&#9660;</a></TH>
+                <TH>Line Coverage <a href="javascript:sort('lines', -1);">&#9650;</a><a href="javascript:sort('lines', +1);">&#9660;</a></TH>
+                <TH>Functions <a href="javascript:sort('functions', -1);">&#9650;</a><a href="javascript:sort('functions', +1);">&#9660;</a></TH>
+                <TH>Branches <a href="javascript:sort('branches', -1);">&#9650;</a><a href="javascript:sort('branches', +1);">&#9660;</a></TH>
+            </tr>
+            
+        </table>
+    </body>
+    <script>
+        
+        let code_metrics = <<CODE_METRICS>>;
+        let total_metrics = <<TOTAL_METRICS>>;
+
+        function progress_bar(value) {
+            let inner_html = "";
+            
+            inner_html += "<div class='progress_container'>";
+            inner_html += "<span class='progress_value'>" + value + "%</span>"
+
+            if(value < 80){
+                inner_html += "<div class='progress_bar_red' style='width:" + value + "px;'></div>";
+            }else if(value < 90){
+                inner_html += "<div class='progress_bar_yellow' style='width:" + value + "px;'></div>";
+            }else{
+                inner_html += "<div class='progress_bar_green' style='width:" + value + "px;'></div>";
+            }
+            
+            inner_html += "</div>";
+
+            return inner_html;
+        }
+
+        function sort(key, order){
+
+            code_metrics.sort(function(a, b) {
+                if(typeof a[key] === "string"){
+                    let lower_a = a[key].toLowerCase();
+                    let lower_b = b[key].toLowerCase();
+
+                    if(lower_a < lower_b){
+                        return order;
+                    }else{
+                        return -order;
+                    }
+                }else{
+                    if(a[key] < b[key]){
+                        return order;
+                    }else{
+                        return -order;
+                    }
+                }
+            });
+            updateTable();
+        }
+
+        function updateTable(){
+            let table_summary = document.getElementById('table_summary');
+            const cur_rows = table_summary.rows.length;
+            for(let i = (cur_rows-1); i >= 1; i--){
+                table_summary.deleteRow(i);
+            }
+
+            for(let i = 0; i < code_metrics.length; i++){
+                const row = code_metrics[i];
+                let table_row = table_summary.insertRow(i+1);
+                let cell_name = table_row.insertCell(0);
+                cell_name.innerHTML = "<a href='" + row['link'] + "'>" + row['name'] + "</a>";
+                
+                let cell_lines = table_row.insertCell(1);
+                cell_lines.innerHTML = progress_bar(row['lines']);
+
+                let cell_functions = table_row.insertCell(2);
+                cell_functions.innerHTML = progress_bar(row['functions']);
+
+                let cell_branches = table_row.insertCell(3);
+                cell_branches.innerHTML = progress_bar(row['branches']);
+            }
+
+            // total metric.
+            let table_row_total = table_summary.insertRow(table_summary.rows.length);
+            let cell_name_total = table_row_total.insertCell(0);
+            cell_name_total.innerHTML = total_metrics['name'];
+            
+            let cell_lines_total = table_row_total.insertCell(1);
+            cell_lines_total.innerHTML = progress_bar(total_metrics['lines']);
+
+            let cell_functions_total = table_row_total.insertCell(2);
+            cell_functions_total.innerHTML = progress_bar(total_metrics['functions']);
+
+            let cell_branches_total = table_row_total.insertCell(3);
+            cell_branches_total.innerHTML = progress_bar(total_metrics['branches']);
+        }
+        
+        updateTable();
+
+    </script>
+
+</html>

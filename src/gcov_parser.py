@@ -42,7 +42,7 @@ class GCOVParser:
                 tokens = line.split()
 
                 if len(tokens) >= 2 and tokens[0].startswith('-:') and tokens[1].startswith('0:Source:'):
-                    self.file_path = tokens[1][9:]
+                    self.source_path = tokens[1][9:]
 
                 elif tokens[0] == 'function':
                     self.num_functions += 1

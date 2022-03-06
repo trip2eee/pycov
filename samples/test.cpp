@@ -1,5 +1,5 @@
 #include <iostream>
-#include "calc.h"
+#include "lib/calc.h"
 
 void foo(const int n)
 {

@@ -1,4 +1,4 @@
-g++ test.cpp calc.cpp -fprofile-arcs -ftest-coverage 
+g++ test.cpp ./lib/calc.cpp -fprofile-arcs -ftest-coverage 
 
 ./a.out
 
