@@ -28,3 +28,15 @@ Main window shows coverage metrics for each file and total coverage.
 If a file is double clicked, source code visualization window shows source codes with coverage.
 
 <img src='images/pycov_code.png' width='500px'>
+
+## Export
+
+Coverage test report can be exported into HTML files via File -> Export menu.
+
+index.html which is the main page of the coverage report.
+
+<img src='images/pycov_index_html.png' width='500px'>
+
+test.cpp.html which is coverage visualization for a source code.
+
+<img src='images/pycov_code_html.png' width='500px'>
